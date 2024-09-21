@@ -7,7 +7,9 @@
 // You can also remove this file if you'd prefer not to use a
 // service worker, and the Workbox build step will be skipped.
 
+import { wait } from "@testing-library/user-event/dist/utils";
 import { clientsClaim } from "workbox-core";
+import { waitUntil } from "workbox-core/_private";
 import { ExpirationPlugin } from "workbox-expiration";
 import { precacheAndRoute, createHandlerBoundToURL } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
@@ -62,6 +64,21 @@ registerRoute(
     ],
   })
 );
+
+self.addEventListener("install", function (event) {
+  console.log("SW Install");
+
+  const asyncInstall = new Promise(function (resolve) {
+    console.log("Waiting installing to finish...");
+
+    setTimeout(resolve, 5000);
+  });
+
+  event.waitUntil(asyncInstall);
+});
+self.addEventListener("activate", function (event) {
+  console.log("SW Activate");
+});
 
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
