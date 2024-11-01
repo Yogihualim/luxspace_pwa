@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Hero from "./components/Hero.js";
 import Browse from "./components/Browse.js";
 import Header from "./components/Header.js";
@@ -8,12 +8,26 @@ import AsideMenu from "./components/AsideMenu.js";
 import Footer from "./components/Footer.js";
 
 function App() {
+  const [items, setItems] = useState([]);
+
+  useEffect(function () {
+    (async function () {
+      const response = await fetch("https://bwacharity.fly.dev/items", {
+        headers: {
+          "Content-Type": "application/json",
+          accept: "application/json",
+        },
+      });
+      const { nodes } = await response.json();
+      setItems(nodes);
+    })();
+  }, []);
   return (
     <>
       <Header />
       <Hero />
       <Browse />
-      <Arrived />
+      <Arrived items={items} />
       <Clients />
       <AsideMenu />
       <Footer />
