@@ -95,6 +95,19 @@ registerRoute(
   })
 );
 
+registerRoute(
+  ({ url }) => url.origin.includes("https://bwacharity.fly.dev"),
+  new NetworkFirst({
+    cacheName: "apidata",
+    plugins: [
+      new ExpirationPlugin({
+        maxAgeSeconds: 360,
+        maxEntries: 30,
+      }),
+    ],
+  })
+);
+
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener("message", (event) => {
